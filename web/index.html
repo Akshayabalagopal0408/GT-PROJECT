@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evolutionary Game Theory Tax Evasion & Adaptive Auditing Simulator</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="header-left"></div>
+    <div class="header-title">
+      <h1>Adaptive Audit & Tax Evasion Simulator</h1>
+      <p>Evolutionary Game-Theoretic Model with Dynamic Policy Enforcement</p>
+    </div>
+    <div class="header-actions">
+      <div style="font-size: 0.8rem; color: var(--text-muted); display: flex; gap: 1rem; align-items: center;">
+        <span><i class="fa-solid fa-bullseye" style="color: var(--accent-cyan);"></i> Critical Audit α*: <strong id="val-alpha-star" style="color: #fff;">40.0%</strong></span>
+        <span><i class="fa-solid fa-crosshairs" style="color: var(--accent-green);"></i> Indifference x*: <strong id="val-x-star" style="color: #fff;">89.3%</strong></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Dashboard Layout -->
+  <main class="main-layout">
+    
+    <!-- Left Sidebar: Controls & Parameters -->
+    <aside class="controls-panel glass">
+      <div class="section-label"><i class="fa-solid fa-sliders"></i> Simulation Controls</div>
+      
+      <!-- Preset Scenarios -->
+      <div class="control-group">
+        <label style="font-size: 0.8rem; color: var(--text-muted);">Scenario Preset</label>
+        <select id="select-preset">
+          <option value="optimal_pid">Optimal PID Adaptive (Stabilized)</option>
+          <option value="baseline">Baseline Static Audit (Cycles)</option>
+          <option value="deterrence">High Fine / Strict Deterrence</option>
+          <option value="costly">Costly Auditing & Budget Limit</option>
+        </select>
+      </div>
+
+      <!-- Policy Selector -->
+      <div class="control-group">
+        <label style="font-size: 0.8rem; color: var(--text-muted);">Enforcement Policy</label>
+        <select id="select-policy">
+          <option value="pid">PID Adaptive (Damped Feedback)</option>
+          <option value="proportional">Proportional Reactive Policy</option>
+          <option value="targeted">Risk-Targeted (Repeat Offender)</option>
+          <option value="budget">Budget-Constrained Policy</option>
+          <option value="static">Static / Fixed Audit Rate</option>
+        </select>
+      </div>
+
+      <hr style="border: none; border-top: 1px solid var(--border-color); margin: 0.25rem 0;">
+
+      <!-- Tax Rate Slider -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <span>Tax Rate (t)</span>
+          <span class="control-value" id="val-tax">30%</span>
+        </div>
+        <input type="range" id="slider-tax" min="0.10" max="0.50" step="0.05" value="0.30">
+      </div>
+
+      <!-- Fine Multiplier Slider -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <span>Fine Multiplier (f)</span>
+          <span class="control-value" id="val-fine">1.5x</span>
+        </div>
+        <input type="range" id="slider-fine" min="0.5" max="3.5" step="0.5" value="1.5">
+      </div>
+
+      <!-- Audit Cost Slider -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <span>Audit Cost per Agent (c_a)</span>
+          <span class="control-value" id="val-cost">$8.0</span>
+        </div>
+        <input type="range" id="slider-cost" min="2.0" max="18.0" step="1.0" value="8.0">
+      </div>
+
+      <!-- Playback Buttons -->
+      <div class="btn-group">
+        <button id="btn-play" class="btn btn-primary"><i class="fa-solid fa-play"></i> Run</button>
+        <button id="btn-step" class="btn btn-secondary"><i class="fa-solid fa-forward-step"></i> Step</button>
+      </div>
+      <button id="btn-reset" class="btn btn-secondary" style="width: 100%;"><i class="fa-solid fa-rotate-left"></i> Reset Simulation</button>
+
+      <!-- Theory Summary Box -->
+      <div style="background: rgba(0,0,0,0.25); padding: 0.8rem; border-radius: 8px; font-size: 0.75rem; border: 1px solid var(--border-color);">
+        <strong style="color: var(--accent-cyan); display: block; margin-bottom: 0.25rem;">Deterrence Rule (Becker / AS):</strong>
+        <span>Taxpayers comply if audit probability exceeds:</span>
+        <code style="display: block; color: #fbbf24; margin-top: 0.3rem;">α &gt; 1 / (1 + f)</code>
+      </div>
+    </aside>
+
+    <!-- Center/Right: Visualizations & Metrics -->
+    <div class="content-area">
+
+      <!-- KPI Metric Row -->
+      <div class="kpi-grid">
+        <div class="kpi-card glass">
+          <div class="kpi-title">Compliance Rate (x)</div>
+          <div class="kpi-value val-green" id="kpi-compliance">97.8%</div>
+          <div class="kpi-sub">Fraction complying</div>
+        </div>
+
+        <div class="kpi-card glass">
+          <div class="kpi-title">Evasion Rate (1-x)</div>
+          <div class="kpi-value val-rose" id="kpi-evasion">2.2%</div>
+          <div class="kpi-sub">Fraction evading</div>
+        </div>
+
+        <div class="kpi-card glass">
+          <div class="kpi-title">Audit Intensity (α)</div>
+          <div class="kpi-value val-cyan" id="kpi-alpha">60.7%</div>
+          <div class="kpi-sub">Population audited</div>
+        </div>
+
+        <div class="kpi-card glass">
+          <div class="kpi-title">Net Gov Revenue</div>
+          <div class="kpi-value val-purple" id="kpi-net-rev">$25,800</div>
+          <div class="kpi-sub">Taxes + Fines - Costs</div>
+        </div>
+
+        <div class="kpi-card glass">
+          <div class="kpi-title">Enforcement Cost</div>
+          <div class="kpi-value val-amber" id="kpi-cost">$4,850</div>
+          <div class="kpi-sub">Audit expenditure</div>
+        </div>
+
+        <div class="kpi-card glass">
+          <div class="kpi-title">Enforcement ROI</div>
+          <div class="kpi-value val-cyan" id="kpi-roi">5.31x</div>
+          <div class="kpi-sub">Net Rev / Cost</div>
+        </div>
+      </div>
+
+      <!-- Charts Row 1: Time Series & Phase Portrait -->
+      <div class="charts-grid">
+        <!-- Time Series Trajectories -->
+        <div class="chart-card glass">
+          <div class="chart-header">
+            <span class="chart-title"><i class="fa-solid fa-chart-line" style="color: var(--accent-green);"></i> Evolutionary Trajectories (Compliance vs. Audit Rate)</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-trajectories"></canvas>
+          </div>
+        </div>
+
+        <!-- 2D Phase Portrait -->
+        <div class="chart-card glass">
+          <div class="chart-header">
+            <span class="chart-title"><i class="fa-solid fa-compass" style="color: var(--accent-purple);"></i> Phase Space (x, α)</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-phase"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row 2: Financial Performance -->
+      <div class="charts-grid" style="grid-template-columns: 1fr;">
+        <div class="chart-card glass" style="height: 300px;">
+          <div class="chart-header">
+            <span class="chart-title"><i class="fa-solid fa-money-bill-trend-up" style="color: var(--accent-blue);"></i> Fiscal Performance: Net Revenue vs. Enforcement Cost Over Time</span>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-finance"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Policy Comparison Table -->
+      <div class="table-card glass" style="margin-top: 1.5rem;">
+        <div class="chart-header">
+          <span class="chart-title"><i class="fa-solid fa-table-list" style="color: var(--accent-cyan);"></i> Comparative Performance Across 5 Enforcement Policies (Monte Carlo Results)</span>
+        </div>
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>Enforcement Policy</th>
+              <th>Final Compliance</th>
+              <th>Stability (σ)</th>
+              <th>Avg Audit Rate</th>
+              <th>Total Gross Rev</th>
+              <th>Enforcement Cost</th>
+              <th>Total Net Rev</th>
+              <th>Fiscal ROI</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="policy-badge" style="background: rgba(231,76,60,0.2); color: #f87171;">Static Audit Policy</span></td>
+              <td style="font-weight: 600; color: #f87171;">1.8%</td>
+              <td>0.003</td>
+              <td>34.9%</td>
+              <td>$3,942,318</td>
+              <td>$418,528</td>
+              <td>$3,523,790</td>
+              <td><strong>8.42x</strong></td>
+            </tr>
+            <tr>
+              <td><span class="policy-badge" style="background: rgba(230,126,34,0.2); color: #fb923c;">Proportional Adaptive</span></td>
+              <td style="font-weight: 600; color: #34d399;">95.1%</td>
+              <td>0.008</td>
+              <td>58.3%</td>
+              <td>$4,614,300</td>
+              <td>$699,773</td>
+              <td>$3,914,527</td>
+              <td><strong>5.59x</strong></td>
+            </tr>
+            <tr style="background: rgba(16,185,129,0.06);">
+              <td><span class="policy-badge" style="background: rgba(46,204,113,0.2); color: #34d399;">PID Adaptive Policy (Optimal)</span></td>
+              <td style="font-weight: 700; color: #34d399;">97.8%</td>
+              <td>0.003</td>
+              <td>60.7%</td>
+              <td>$4,596,225</td>
+              <td>$728,467</td>
+              <td>$3,867,758</td>
+              <td><strong>5.31x</strong></td>
+            </tr>
+            <tr>
+              <td><span class="policy-badge" style="background: rgba(155,89,182,0.2); color: #c084fc;">Risk-Targeted Policy</span></td>
+              <td style="font-weight: 600; color: #fbbf24;">49.6%</td>
+              <td>0.032</td>
+              <td>58.1%</td>
+              <td>$5,056,770</td>
+              <td>$697,750</td>
+              <td>$4,359,020</td>
+              <td><strong>6.25x</strong></td>
+            </tr>
+            <tr>
+              <td><span class="policy-badge" style="background: rgba(52,152,219,0.2); color: #60a5fa;">Budget-Constrained Policy</span></td>
+              <td style="font-weight: 600; color: #f87171;">19.9%</td>
+              <td>0.009</td>
+              <td>47.7%</td>
+              <td>$5,194,986</td>
+              <td>$572,930</td>
+              <td>$4,622,056</td>
+              <td><strong>8.07x</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

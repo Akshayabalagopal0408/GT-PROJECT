@@ -1,0 +1,6 @@
+Enforcement Policy,Final Compliance,Volatility (std),Avg Audit Rate,Total Gross Rev,Total Audit Cost,Total Net Revenue,Enforcement ROI
+Static Audit Policy,1.8%,0.003,34.9%,"3,942,318","418,528","3,523,790",8.42x
+Proportional Adaptive Policy,95.1%,0.008,58.3%,"4,614,300","699,773","3,914,527",5.59x
+PID Adaptive Policy,97.8%,0.003,60.7%,"4,596,225","728,467","3,867,758",5.31x
+Risk-Targeted Policy,49.6%,0.032,58.1%,"5,056,770","697,750","4,359,020",6.25x
+Budget-Constrained Policy,19.9%,0.009,47.7%,"5,194,986","572,930","4,622,056",8.07x
