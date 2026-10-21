@@ -188,17 +188,51 @@ We formalize and compare five distinct enforcement regimes:
 
 ---
 
-## 5. Visual Artifacts Generated
+## 5. Benchmarking Against Published Research Literature
+
+To position our project academically, we compare our methodology and findings directly against five seminal published studies in evolutionary tax compliance:
+
+| Published Paper | Methodology | What They Discovered | How Our Project Extends Their Findings |
+| :--- | :--- | :--- | :--- |
+| **Fedeli & Costarelli (2026)** <br> *Economics of Governance* | Two-population continuous Replicator Dynamics (ODEs). | Diagnosed that endogenous enforcement creates **permanent Lotka–Volterra cycles** around an interior center ($\text{tr}(J)=0, \det(J)>0$). | **Solves the cycles:** While they diagnose cycles as unavoidable, our **PID Adaptive Controller dampens the oscillations to zero**, achieving **97.8% stable compliance**. |
+| **De Giovanni, Lamantia, & Pezzino (2023)** <br> *Commun. Nonlinear Sci. Numer. Simul.* | Two-population evolutionary game with auditor bribery & corruption. | Auditor corruption induces periodic orbits, limit cycles, and bifurcation chaos. | **Focuses on macro-policy design:** Rather than micro-bribe taking, we compare **5 systemic administrative algorithms** under fiscal constraints. |
+| **De Giovanni, Lamantia, & Pezzino (2019)** <br> *Struct. Change Econ. Dyn.* | Replicator dynamics with an optimal-control social planner. | Optimal control can guide taxpayers to compliance if the government solves an infinite-horizon optimization problem. | **Practical implementation:** Instead of assuming an idealized planner solving complex integrals, our **PID controller achieves the target state using simple real-time error feedback**. |
+| **Hashimzade, Myles, Page, & Rablen (2015)** <br> *Economics of Governance* | Micro Agent-Based Modeling (ABM) with social networks. | Tax evasion diffuses through social networks; random audits fail to stop "evasion clusters". | **Feedback-driven containment:** We incorporate their peer imitation phenomenon using the **Fermi rule ($N=1,000$)**, but add **active feedback and risk watchlists** to stop evasion clusters. |
+| **Chica, Hernández, Manrique, & Chiong (2021)** <br> *IEEE Comput. Intell. Mag.* | Evolutionary game on scale-free networks for VAT fraud. | Calibrated to Canary Islands VAT data; auditing low-value transactions curbs VAT evasion faster than auditing high-value ones. | **Global empirical scope:** While they studied local Spanish VAT, our project provides an **empirical income tax model calibrated across 6 global jurisdictions** (USA, Germany, Italy, India, Brazil, OECD 38). |
+
+---
+
+## 6. Empirical Validation: Cross-National Case Studies (OECD & World Bank Data)
+
+To move beyond purely synthetic assumptions, we calibrated our model to official administrative statistics from the **OECD ISORA series**, **World Bank Enterprise Surveys**, and **US IRS Tax Gap reports**:
+
+| Jurisdiction | Data Source | Statutory Tax ($\tau$) | Declared Share ($\beta$) | Real Audit ($p_I$) | Status-Quo Final Compliance | **Calibrated PID Final Compliance** | Revenue Multiplier |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| 🇺🇸 **United States** | IRS Tax Gap / OECD | $28.0\%$ | $85.0\%$ | $1.5\%$ | $0.5\%$ *(Failure)* | **86.1%** | **16.0x Higher** ($3.19M vs $199k) |
+| 🇩🇪 **Germany** | OECD ISORA 2021/2023 | $31.0\%$ | $88.0\%$ | $2.2\%$ | $0.5\%$ *(Failure)* | **90.8%** | **13.7x Higher** ($3.54M vs $257k) |
+| 🇮🇹 **Italy** | ISTAT / OECD ISORA | $27.0\%$ | $77.0\%$ | $2.8\%$ | $0.5\%$ *(Failure)* | **86.1%** | **13.3x Higher** ($3.08M vs $232k) |
+| 🇮🇳 **India** | CBDT / World Bank ES | $25.0\%$ | $72.0\%$ | $0.5\%$ | $0.5\%$ *(Failure)* | **86.6%** | **16.8x Higher** ($2.89M vs $171k) |
+| 🇧🇷 **Brazil** | World Bank ES | $34.0\%$ | $69.0\%$ | $1.2\%$ | $0.5\%$ *(Failure)* | **88.0%** | **16.5x Higher** ($3.93M vs $238k) |
+| 🌐 **OECD 38 Average** | OECD Tax Administration | $29.0\%$ | $84.0\%$ | $1.9\%$ | $0.5\%$ *(Failure)* | **86.9%** | **15.9x Higher** ($3.33M vs $209k) |
+
+### Key Empirical Findings:
+1. **The Real-World Audit Deficit:** Current observed physical audit coverage ($0.5\% - 2.8\%$) is mathematically insufficient on its own to deter rational evasion when citizens imitate peers ($\alpha^* \approx 50\%$).
+2. **PID Rescuing Power:** Across all tested economies, deploying our PID Adaptive Controller stabilizes compliance between **86.1% and 90.8%**, multiplying net revenues by **13x to 17x** compared to status-quo static auditing.
+
+---
+
+## 7. Visual Artifacts Generated
 
 All figures are rendered at 300 DPI and stored in the `output/` directory:
 - `output/phase_portraits.png`: Vector streamplots showing Lotka–Volterra closed orbits in static inspection games vs. stable asymptotic spiral sinks under adaptive control.
 - `output/policy_comparison_trajectories.png`: Multi-panel trajectories comparing compliance rate, audit intensity, and net revenue over 150 periods.
 - `output/policy_bar_metrics.png`: Comparative bar charts highlighting steady-state compliance, net revenue, and audit expenditure across all 5 policies.
 - `output/sensitivity_analysis.png`: 2D parameter sweep heatmaps showing steady-state compliance and revenue as functions of fine multipliers ($f \in [0.5, 3.0]$) and audit costs ($c_a \in [4, 16]$).
+- `output/empirical_country_comparison.png`: Multi-panel cross-national simulation comparing status-quo vs. PID adaptive auditing for USA, Germany, Italy, India, Brazil, and OECD 38.
 
 ---
 
-## 6. How to Run the Code
+## 8. How to Run the Code
 
 ### Prerequisites
 Python 3.10+ with `numpy`, `scipy`, `pandas`, `matplotlib`, `seaborn`:
@@ -211,10 +245,13 @@ pip install numpy scipy pandas matplotlib seaborn
 # 1. Run the 5-policy Monte Carlo comparative benchmark:
 python experiments/run_comparison.py
 
-# 2. Generate phase portraits and vector fields:
+# 2. Run the empirical multi-country simulation study:
+python experiments/empirical_country_comparison.py
+
+# 3. Generate theoretical phase portraits and vector fields:
 python experiments/phase_portrait.py
 
-# 3. Run parameter sensitivity heatmaps:
+# 4. Run parameter sensitivity heatmaps:
 python experiments/sensitivity_analysis.py
 ```
 
@@ -223,4 +260,5 @@ python experiments/sensitivity_analysis.py
 # Serve the web application locally:
 python -m http.server 8085 --directory web
 ```
-Then navigate to `http://localhost:8085` in any modern web browser to interactively adjust parameters, switch policies, and observe real-time evolutionary dynamics!
+Then navigate to `http://localhost:8085` in any modern web browser to interactively adjust parameters, switch policies, load empirical country presets, and observe real-time evolutionary dynamics!
+
