@@ -510,6 +510,31 @@ document.addEventListener("DOMContentLoaded", () => {
       fineInput.value = 1.5;
       costInput.value = 8.0;
       policySelect.value = "pid";
+    } else if (preset === "country_usa") {
+      taxInput.value = 0.28;
+      fineInput.value = 0.75;
+      costInput.value = 4.0;
+      policySelect.value = "pid";
+    } else if (preset === "country_deu") {
+      taxInput.value = 0.31;
+      fineInput.value = 1.0;
+      costInput.value = 6.0;
+      policySelect.value = "pid";
+    } else if (preset === "country_ita") {
+      taxInput.value = 0.27;
+      fineInput.value = 0.9;
+      costInput.value = 5.0;
+      policySelect.value = "pid";
+    } else if (preset === "country_ind") {
+      taxInput.value = 0.25;
+      fineInput.value = 1.0;
+      costInput.value = 3.0;
+      policySelect.value = "pid";
+    } else if (preset === "country_oecd") {
+      taxInput.value = 0.29;
+      fineInput.value = 0.85;
+      costInput.value = 5.0;
+      policySelect.value = "pid";
     }
     // Trigger updates
     taxInput.dispatchEvent(new Event("input"));

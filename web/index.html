@@ -45,10 +45,19 @@
       <div class="control-group">
         <label style="font-size: 0.8rem; color: var(--text-muted);">Scenario Preset</label>
         <select id="select-preset">
-          <option value="optimal_pid">Optimal PID Adaptive (Stabilized)</option>
-          <option value="baseline">Baseline Static Audit (Cycles)</option>
-          <option value="deterrence">High Fine / Strict Deterrence</option>
-          <option value="costly">Costly Auditing & Budget Limit</option>
+          <optgroup label="Theoretical Scenarios">
+            <option value="optimal_pid">Optimal PID Adaptive (Stabilized)</option>
+            <option value="baseline">Baseline Static Audit (Cycles)</option>
+            <option value="deterrence">High Fine / Strict Deterrence</option>
+            <option value="costly">Costly Auditing & Budget Limit</option>
+          </optgroup>
+          <optgroup label="Empirical Benchmarks (OECD / WB)">
+            <option value="country_usa">🇺🇸 United States (IRS Tax Gap)</option>
+            <option value="country_deu">🇩🇪 Germany (OECD ISORA)</option>
+            <option value="country_ita">🇮🇹 Italy (Fedeli & Costarelli 2026)</option>
+            <option value="country_ind">🇮🇳 India (CBDT / World Bank)</option>
+            <option value="country_oecd">🌐 OECD 38-Country Average</option>
+          </optgroup>
         </select>
       </div>
 

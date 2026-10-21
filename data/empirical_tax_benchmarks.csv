@@ -1,0 +1,9 @@
+country_code,country_name,data_source,statutory_tax_rate_tau,under_declaration_share_evaded,declared_share_beta,audit_coverage_rate_pi,cost_of_collection_pct_C,penalty_multiplier_phi,audit_detection_efficacy_alpha,notes
+USA,United States,IRS Tax Gap & OECD ISORA,0.28,0.15,0.85,0.015,0.005,0.75,0.65,"High compliance regime; 85% voluntary compliance rate; strong third-party reporting"
+DEU,Germany,OECD ISORA 2021/2023,0.31,0.12,0.88,0.022,0.013,1.00,0.75,"Robust European administrative apparatus; rigorous corporate audit protocols"
+ITA,Italy,OECD ISORA & ISTAT,0.27,0.23,0.77,0.028,0.011,0.90,0.60,"Studied extensively in Fedeli & Costarelli (2026); prominent VAT/Income tax gap"
+GBR,United Kingdom,HMRC & OECD ISORA,0.25,0.10,0.90,0.018,0.007,0.80,0.70,"HMRC digital matching system; low tax gap in personal income"
+IND,India,CBDT & World Bank ES,0.25,0.28,0.72,0.005,0.006,1.00,0.50,"Emerging market with large informal cash sector; digital faceless scrutiny ongoing"
+BRA,Brazil,World Bank Enterprise Surveys,0.34,0.31,0.69,0.012,0.014,1.20,0.55,"High tax complexity and burden; significant informal sector non-reporting"
+OECD_AVG,OECD 38 Average,OECD Tax Administration 2021,0.29,0.16,0.84,0.019,0.009,0.85,0.65,"Consolidated benchmark average across 38 advanced industrial economies"
+EMERGING_AVG,Developing Nations Average,World Bank Enterprise Surveys,0.27,0.30,0.70,0.008,0.012,1.10,0.50,"Consolidated benchmark for developing/emerging economies with high informality"

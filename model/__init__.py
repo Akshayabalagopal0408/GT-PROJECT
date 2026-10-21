@@ -13,6 +13,7 @@ from .enforcement_policies import (
 )
 from .continuous_dynamics import ReplicatorDynamicsSimulation
 from .agent_based_model import AgentBasedTaxModel
+from .empirical_loader import EmpiricalTaxDataLoader
 
 __all__ = [
     "TaxEvasionGame",
@@ -23,4 +24,6 @@ __all__ = [
     "BudgetConstrainedPolicy",
     "ReplicatorDynamicsSimulation",
     "AgentBasedTaxModel",
+    "EmpiricalTaxDataLoader",
 ]
+
